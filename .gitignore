@@ -9,3 +9,7 @@ coverage/
 .temp/
 artifacts/
 *.tsbuildinfo
+.hallmark/*.jpg
+.hallmark/*.png
+.hallmark/before*
+.hallmark/compare.html

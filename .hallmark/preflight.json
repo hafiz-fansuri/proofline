@@ -1,0 +1,22 @@
+{
+  "scanned": "2026-11-14",
+  "findings": {
+    "fonts": "Helvetica Neue in src/style.css:1, before redesign",
+    "palette": "White and Swiss red, before redesign",
+    "framework": "React and Vite in package.json:1"
+  },
+  "preserve": [
+    "Proofline name",
+    "all backend APIs",
+    "source documents",
+    "evaluation",
+    "history and feedback",
+    "CI/CD"
+  ],
+  "introduce": [
+    "Furrow material",
+    "interactive OWASP atlas",
+    "self-hosted Red Hat typography",
+    "first-screen composer"
+  ]
+}

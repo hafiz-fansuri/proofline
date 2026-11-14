@@ -6,7 +6,7 @@ Proofline is a retrieval-augmented generation (RAG) web app that helps developer
 
 **[Open the app](https://hafiz-fansuri.github.io/proofline/)** · [Explore the code](https://github.com/hafiz-fansuri/proofline) · [View CI/CD runs](https://github.com/hafiz-fansuri/proofline/actions)
 
-![Proofline research interface with a cited answer and source evidence](docs/screenshots/research.jpg)
+![Proofline workbench with an interactive OWASP risk atlas and question composer](docs/screenshots/research.jpg)
 
 ## The problem it addresses
 
@@ -16,9 +16,9 @@ Developers building AI applications need to understand risks such as prompt inje
 
 | Area | What it provides |
 | --- | --- |
-| **Research** | Ask a security question, choose hybrid or keyword retrieval, inspect citations, and save helpfulness feedback. |
+| **Research** | Explore the OWASP risk atlas, ask a security question, inspect citations, and save helpfulness feedback. |
 | **Source library** | Browse 11 OWASP 2026 documents with original links, pinned revisions, attribution, and stored Markdown. |
-| **Evaluation** | Compare retrieval strategies on 16 authored cases, inspect results, and export benchmark runs. |
+| **Evaluation** | Compare retrieval strategies with a chart of saved runs, inspect 16 authored cases, and export results. |
 | **CI / CD** | See real GitHub workflow results and understand how changes reach the live app. |
 
 Try asking: **“What controls reduce excessive agency in a tool-using assistant?”** Then click a numbered citation to inspect the supporting passage.

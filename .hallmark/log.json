@@ -1,0 +1,22 @@
+[
+ {
+  "mode": "redesign",
+  "depth": "full",
+  "scope": "app",
+  "shape": "app screen",
+  "theme": "furrow",
+  "axes": "light/grotesk-sans/warm",
+  "nav": "four-destination top navigation",
+  "signature": "selectable OWASP evidence atlas",
+  "imagery": "live product geometry",
+  "prompt": "Creative Proofline redesign with Hallmark",
+  "waived": [],
+  "sections": [
+   "research",
+   "sources",
+   "evaluation",
+   "delivery"
+  ],
+  "date": "2026-11-14"
+ }
+]
