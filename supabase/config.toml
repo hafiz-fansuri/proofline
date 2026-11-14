@@ -1,0 +1,4 @@
+project_id = "proofline"
+[functions.proofline]
+verify_jwt = true
+entrypoint = "./functions/proofline/index.ts"
