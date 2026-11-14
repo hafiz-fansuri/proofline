@@ -1,137 +1,92 @@
-# proofline.
+# Proofline
 
-**AI security, with evidence.** An advanced RAG workbench for developers investigating AI application security risks and mitigations. Search versioned OWASP guidance, inspect the exact passages supplied to a free language model, and compare retrieval strategies with real persisted evaluations.
+### AI security, with evidence.
 
-[Live web app](https://hafiz-fansuri.github.io/proofline/) · [Evaluation protocol](docs/EVALUATION.md) · [CI/CD walkthrough](docs/CICD.md) · [Setup and operations](docs/OPERATIONS.md)
+Proofline is a retrieval-augmented generation (RAG) web app that helps developers investigate AI application security. It searches a versioned collection of OWASP guidance, generates an answer with a free language model, and shows the exact passages used to produce it.
 
-![Proofline research interface](docs/screenshots/research.jpg)
+**[Open the app](https://hafiz-fansuri.github.io/proofline/)** · [Explore the code](https://github.com/hafiz-fansuri/proofline) · [View CI/CD runs](https://github.com/hafiz-fansuri/proofline/actions)
 
-## Why this topic
+![Proofline research interface with a cited answer and source evidence](docs/screenshots/research.jpg)
 
-AI applications increasingly connect models to documents, tools and workflows. Developers need to reason about prompt injection, poisoning, excessive agency, output handling and other concrete failure modes. This project demonstrates engineering decisions around that problem: versioned ingestion, hybrid search, evidence provenance, honest measurement, model failure handling, access boundaries and automated frontend delivery. It is a portfolio implementation, not a compliance product or security certification.
+## The problem it addresses
 
-## Try it
+Developers building AI applications need to understand risks such as prompt injection, poisoned documents, excessive agent permissions, and unsafe model outputs. A generated answer is easier to assess when its sources are visible. Proofline brings source discovery, cited answers, and retrieval evaluation into one workbench.
 
-1. Open **Research** and ask “What controls reduce excessive agency in a tool-using assistant?” Select hybrid retrieval or the keyword baseline.
-2. Click a numbered citation to inspect its passage. Open the full source, original pinned GitHub file, or stored Markdown.
-3. Mark helpfulness; your recent investigations persist in Supabase and are accessible to your browser session.
-4. Open **Evaluation**, run both strategies, inspect cases, and export the real results.
-5. Open **CI / CD** to see actual workflow runs and learn how a commit reaches the deployed site.
+## What you can do
 
-Free model providers can be slow or unavailable. In that case, the app clearly reports the provider error and keeps retrieved evidence available. No paid fallback is used. Do not submit confidential information.
+| Area | What it provides |
+| --- | --- |
+| **Research** | Ask a security question, choose hybrid or keyword retrieval, inspect citations, and save helpfulness feedback. |
+| **Source library** | Browse 11 OWASP 2026 documents with original links, pinned revisions, attribution, and stored Markdown. |
+| **Evaluation** | Compare retrieval strategies on 16 authored cases, inspect results, and export benchmark runs. |
+| **CI / CD** | See real GitHub workflow results and understand how changes reach the live app. |
 
-## Architecture
+Try asking: **“What controls reduce excessive agency in a tool-using assistant?”** Then click a numbered citation to inspect the supporting passage.
+
+## How it works
+
+The corpus contains **188 heading-aware passages**. Hybrid search combines keyword matching and semantic similarity using reciprocal rank fusion. Up to five passages are supplied to the model, with a limit of two passages per source document.
 
 ```mermaid
-flowchart TB
- O[OWASP pinned Markdown / CC BY-SA 4.0] --> C[Owner-run collector / SHA-256 / heading-aware chunks]
- C --> D[(Supabase documents + chunks)]
- C --> S[Supabase Storage / original Markdown]
- D --> E[gte-small / normalized 384D embeddings]
- E --> D
- U[React / Swiss editorial UI] --> F[Supabase Edge Function / validation + quotas]
- F --> K[Postgres full-text top 24]
- F --> V[pgvector cosine top 24]
- K --> R[RRF k=40 / maximum 2 passages per source / top 5]
- V --> R
- R --> M[OpenRouter free route / no tools]
- M --> A[Citation-ID validation / escaped answer + evidence]
- A --> U
- A --> Q[(Supabase questions + feedback)]
- F --> B[16-case retrieval benchmark]
- B --> X[(Supabase eval_cases + eval_runs)]
- X --> U
- G[GitHub Actions / tests + build] --> P[GitHub Pages static frontend]
- P --> U
+flowchart TD
+    Documents["Versioned OWASP documents"] --> Database["Supabase: passages and embeddings"]
+    Question["Your question"] --> Search["Keyword and semantic search"]
+    Database --> Search
+    Search --> Ranking["Rank fusion and source diversity"]
+    Ranking --> Model["Free OpenRouter model"]
+    Model --> Answer["Answer with numbered citations"]
+    Ranking --> Evidence["Inspectable source passages"]
+    Answer --> Interface["Proofline workbench"]
+    Evidence --> Interface
 ```
 
-The API constructs lexical OR queries after stop-word filtering. Semantic candidates below cosine similarity 0.34 are excluded. Reciprocal rank fusion combines both rankings; a diversity limit prevents one source occupying every result. Keyword search works without embeddings, and hybrid search falls back visibly when query embedding fails. Small-corpus vector search is exact, not approximate HNSW. No LangChain abstraction hides these steps.
+Questions, answers, retrieved evidence, feedback, evaluation results, and release metadata are stored in Supabase. Original source documents are also archived in Supabase Storage.
 
-## What is real here
+## Technology
 
-| Capability | Implementation |
-|---|---|
-| Corpus | 11 OWASP 2026 documents; 188 heading-aware passages |
-| Provenance | Pinned source revision, original URL, SHA-256, licence and headings |
-| Retrieval | English full-text + gte-small vectors + reciprocal rank fusion |
-| Generation | Server-side OpenRouter free route; actual served model recorded |
-| Evaluation | 16 authored cases, keyword/hybrid comparison, saved runs and JSON export |
-| Persistence | All application records in Supabase Postgres/Storage |
-| UI | Responsive React interface, source reader, evidence rail, accessible labels and modal focus handling |
-| Delivery | Immutable action references, locked dependencies, tests, type/build checks, GitHub Pages |
+| Layer | Technology |
+| --- | --- |
+| Interface | React, TypeScript, Vite, CSS, Lucide icons |
+| Backend | Supabase Edge Functions |
+| Data and search | Supabase Postgres, full-text search, pgvector, Storage |
+| Embeddings | Normalized 384-dimensional `gte-small` vectors |
+| Answer generation | OpenRouter: `particle-ai/particle-1:free`, with a bounded free fallback |
+| Verification and hosting | GitHub Actions and GitHub Pages |
 
-## Measured results
+## How the app is published
 
-| Strategy | Document recall @ 5 | MRR | Mean retrieval latency |
-|---|---:|---:|---:|
-| Keyword baseline | 1.000 | 0.885 | 52 ms |
-| Hybrid + RRF | 1.000 | 0.962 | 180 ms |
+The frontend is hosted publicly on **GitHub Pages**. The backend runs separately in **Supabase**, where the model API key is saved as an Edge Function secret.
 
-Hosted measurements from 14 November 2026, on **13 answerable development cases**. Three unsupported cases are shown separately and excluded from these metrics. The higher MRR means the first expected source appeared earlier; the hybrid path also added latency. This does **not** establish 100% answer accuracy. Citation-ID checks do not establish factual support. See the [protocol and limitations](docs/EVALUATION.md) before interpreting results.
+```mermaid
+flowchart LR
+    Commit["Push to main"] --> Checks["Tests and production build"]
+    Checks --> Artifact["Verified frontend artifact"]
+    Artifact --> Pages["GitHub Pages"]
+    Pages --> Backend["Supabase backend"]
+    Backend --> Provider["OpenRouter"]
+```
 
-![Persisted retrieval evaluation dashboard](docs/screenshots/evaluation.jpg)
+Pull requests run verification without publishing. A push to `main` publishes only after verification succeeds. Database and Edge Function releases remain explicit owner-operated steps. See the [CI/CD walkthrough](docs/CICD.md) for the full explanation.
 
-## Local development
+## Evaluating the system
 
-Requires Node 22+ and npm. The checked-in config contains public client identifiers for the demo; its backend quotas are shared. To create an independent instance, follow [Operations](docs/OPERATIONS.md).
+The dashboard compares keyword and hybrid retrieval using **recall at five passages**, **mean reciprocal rank**, and **retrieval latency**. Runs are saved so their cases and retrieved sources can be inspected later.
+
+The development set has 13 answerable questions and three unsupported questions. Retrieval scores measure source finding, **not answer accuracy**. Citation checks validate reference IDs; they do not prove that a passage supports a claim. The [evaluation guide](docs/EVALUATION.md) explains the measurements and how to assess answer quality independently.
+
+## Run locally
+
+Use Node.js 22 or newer:
 
 ```sh
 npm ci
 npm run dev
-npm test
-npm run build
-node scripts/check-public-build.mjs
-node scripts/smoke.mjs
-# Optional: consumes one shared generation task
-node scripts/smoke.mjs --generation
-# Two persisted retrieval-only benchmark runs
-npm run eval
 ```
 
-Store provider credentials only in Supabase Edge Function Secrets as `RAGS` or `OPENROUTER_API_KEY`. They are never needed to build the frontend. `.env.example` documents owner-side variables; never commit a real `.env`.
+The checked-in configuration connects to the quota-limited public demo backend. For your own Supabase instance, model secrets, and corpus ingestion, follow the [setup and operations guide](docs/OPERATIONS.md).
 
-## CI/CD, explained
+## Scope and attribution
 
-```mermaid
-sequenceDiagram
- participant Dev as Developer
- participant CI as GitHub Actions
- participant Pages as GitHub Pages
- Dev->>CI: Open PR or push main
- CI->>CI: npm ci → tests → TypeScript/Vite build → private-key pattern check
- alt Checks fail
- CI-->>Dev: Failure; publication stops
- else Main passes
- CI->>Pages: Deploy exact verified artifact via short-lived identity
- Pages-->>Dev: Live release
- else Pull request passes
- CI-->>Dev: Ready for review; no deployment
- end
-```
+Proofline is a public portfolio demo. Free model availability varies; if generation fails, retrieved evidence remains available. No paid fallback is enabled. Browser sessions provide separate histories, but the app does not have account-based authentication. Do not submit confidential information.
 
-Frontend delivery is automated. Database migrations and Edge Functions remain explicit owner releases. This prevents frontend CI from holding database administrator credentials. Follow the [step-by-step walkthrough](docs/CICD.md) to make a change, inspect checks, understand permissions, and revert a release.
-
-## Source map
-
-```text
-src/main.tsx                         Four application views
-src/lib/core.mjs                     Pure retrieval/citation/metric logic
-supabase/functions/proofline/        Hosted API and model integration
-supabase/migrations/                 Schema, RLS, RPCs, indexes and Storage
-data/evaluation-cases.json           Authored labels and rationales
-scripts/                            Collect, seed, index, evaluate and smoke checks
-tests/                              Core behaviour tests
-.github/workflows/ci.yml             Verification and Pages publication
-docs/                               Evaluation, operations and CI/CD explanations
-```
-
-## Boundaries and next steps
-
-This is a public, quota-limited demo with browser session isolation, not account-based authentication. It has a focused corpus, a small development benchmark, no calibrated answerability classifier and no independent answer-quality score. Free routing changes the served model; inspect each answer's metadata. Native Supabase ONNX embeddings are being considered for deprecation, so an embedding migration plan is documented. Before production, add authenticated ownership, independent held-out evaluations, retention controls, monitoring, and a protected corpus-maintenance workflow.
-
-## Attribution and references
-
-Code is [MIT](LICENSE). OWASP source text and derived passages remain **CC BY-SA 4.0**, with formatting and chunking adaptations; no OWASP endorsement is implied. Original attribution and licence are retained in Supabase and visible in the source library. Source revision: [`9253e38`](https://github.com/GenAI-Security-Project/GenAI-LLM-Top10/tree/9253e38ade58e959b531c0c5c9a4842272c9cd0e/2026/final).
-
-Implementation references: [Supabase vector search](https://supabase.com/docs/guides/ai/vector-columns), [Row Level Security](https://supabase.com/docs/guides/database/postgres/row-level-security), [OpenRouter free router](https://openrouter.ai/docs/guides/routing/routers/free-router), [GitHub Pages custom workflows](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages).
-
+Application code is [MIT licensed](LICENSE). OWASP source content and derived passages remain **CC BY-SA 4.0**, with formatting and chunking adaptations. The corpus is pinned to [source revision `9253e38`](https://github.com/GenAI-Security-Project/GenAI-LLM-Top10/tree/9253e38ade58e959b531c0c5c9a4842272c9cd0e/2026/final). No OWASP endorsement is implied.
