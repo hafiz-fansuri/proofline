@@ -4,7 +4,7 @@
 
 In Supabase → Edge Functions → Secrets, save the OpenRouter credential as `OPENROUTER_API_KEY` or the already-supported `RAGS`. Never paste it into the browser, GitHub, a Vite environment variable, or chat. The function also recognizes lowercase `rags`. Configuration status exposes only a boolean.
 
-The default route is `inclusionai/ling-3.2-flash:free`, with one bounded `particle-ai/particle-1:free` fallback. Both returned cited answers in live tests. `OPENROUTER_MODEL` can pin an explicit `:free` model or `openrouter/free`; any other route is rejected. The actual served model is stored on each answer. Reasoning text is excluded from returned output; reasoning is not disabled because some free endpoints require it. There is a 3,000-token output cap and a 55-second timeout per provider attempt.
+The default route is `particle-ai/particle-1:free`, with one bounded `inclusionai/ling-3.2-flash:free` fallback. Both returned cited answers in live tests. `OPENROUTER_MODEL` can pin an explicit `:free` model or `openrouter/free`; any other route is rejected. The actual served model is stored on each answer. Reasoning text is excluded from returned output; reasoning is not disabled because some free endpoints require it. There is a 3,000-token output cap and a 55-second timeout per provider attempt.
 
 Free capacity is variable. A successful live test used `nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free`. Earlier tested free models returned empty completions or HTTP 429. This is why the UI retains evidence when generation fails. No paid model is selected automatically. Free inference does not mean unlimited hosting, storage, or requests. Review [OpenRouter limits](https://openrouter.ai/docs/api-reference/limits) and [free routing](https://openrouter.ai/docs/guides/routing/routers/free-router).
 
@@ -46,4 +46,5 @@ The public demo has no account login. The Edge Function uses its service credent
 Protect the browser session token: it grants access to that browser's history. This is demonstration-level session isolation, not enterprise authentication or multi-tenant authorization. Add Supabase Auth, per-user policies, retention/deletion workflows, abuse protection and operational monitoring before processing private customer information. Data currently remains until the project owner removes it; no automatic retention job is configured.
 
 The model has no tools and cannot execute retrieved instructions. Output renders as escaped text, not HTML. Prompt instructions and citations are mitigation layers, not proof against prompt injection or hallucinations. Corpus ingestion is pinned and owner-operated; no arbitrary URL fetch or upload is exposed. Keep dependencies updated, review provider logs without copying secrets, and test the deployed API after backend changes.
+
 

@@ -28,7 +28,7 @@ flowchart LR
 
 ## Model and key
 
-The user's `RAGS` secret is detected server-side; it is never included in GitHub or browser output. The default is `inclusionai/ling-3.2-flash:free`, with a bounded `particle-ai/particle-1:free` fallback. Paid routes are rejected. Free models can fail, throttle, change or disappear; retrieved evidence remains available. Ollama is a possible future local adapter, not connected to this hosted deployment. A hosted backend cannot reach a laptop's localhost.
+The user's `RAGS` secret is detected server-side; it is never included in GitHub or browser output. The default is `particle-ai/particle-1:free`, with a bounded `inclusionai/ling-3.2-flash:free` fallback. Paid routes are rejected. Free models can fail, throttle, change or disappear; retrieved evidence remains available. Ollama is a possible future local adapter, not connected to this hosted deployment. A hosted backend cannot reach a laptop's localhost.
 
 ## Evaluation you should understand
 
@@ -47,3 +47,4 @@ A pull request runs `npm ci`, six tests, TypeScript/Vite build and a limited pri
 Six core tests and the production build passed. Live API checks verified model output with valid citation IDs, corpus availability, blocked direct database access, session-history separation and feedback ownership. Browser checks exercised source reading, feedback, benchmark execution/drill-down and mobile overflow. GitHub Actions verification and Pages deployment both succeeded.
 
 This is a public portfolio demo, not enterprise authentication, a compliance certificate or a security guarantee. Do not enter confidential information. Generation is capped at 20 tasks/day globally and 10/session, with up to two provider attempts/task; evaluations are capped at 12 runs/day. Supabase's native ONNX embeddings may require migration if the considered deprecation proceeds. Original OWASP content remains CC BY-SA 4.0; application code is MIT.
+
