@@ -13,3 +13,5 @@ artifacts/
 .hallmark/*.png
 .hallmark/before*
 .hallmark/compare.html
+.hallmark/salt
+owner-reports/

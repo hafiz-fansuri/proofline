@@ -1,6 +1,6 @@
 # Proofline design system
 
-The interface uses Hallmark's Furrow material across its four application views. The defining object is a selectable OWASP source atlas, with the question composer visible alongside it on desktop.
+The interface uses Hallmark's Furrow material across its two public application views. The defining object is a selectable OWASP source atlas, with the question composer visible alongside it on desktop.
 
 ## Material and typography
 
@@ -28,11 +28,11 @@ The interface uses Hallmark's Furrow material across its four application views.
 
 ## Composition and interaction
 
-- A restrained four-destination navigation strip, never a redundant sidebar.
+- A restrained two-destination navigation strip, never a redundant sidebar.
 - Research opens with the composer and atlas. Source selection changes the preview; investigation runs the existing API; source reading opens the original document.
 - The atlas is a navigation layout. Its coordinates and contours do not represent measured similarity, geography, risk severity, or relationships between risks.
 - Answer mode contracts the opening region and prioritizes the cited answer and evidence rail. A return control restores exploration.
-- The evaluation comparison uses saved measurements, a labelled 0–1 MRR scale, and explicit development-set context.
+- Evaluation, model comparisons and CI/CD belong in owner reports and developer tooling, not the public interface.
 - Use rules and spacing for ordinary structure. A raised surface is reserved for source reading.
 
 ## Controls and motion
@@ -44,4 +44,4 @@ The interface uses Hallmark's Furrow material across its four application views.
 
 ## Product truth
 
-Only show corpus counts, model metadata, benchmark results and workflow states returned by the application. Never add invented testimonials, activity, performance claims or compliance guarantees. Keep factual-support caveats visible beside citation checks and retrieval metrics.
+Use plain-language topics, simple actions and readable sources. Hide search settings, model identifiers, timing metrics, chunk counts and deployment details from the public flow. Never add invented testimonials, activity, performance claims or compliance guarantees. Keep a short reminder that AI can be wrong and sources should be checked.

@@ -258,3 +258,10 @@ footer > button { display:grid; place-items:center; width:34px; height:34px; bor
  .atlas-caption { left: 16px; right: 16px; font-size: 10px; }
  .map-note { left: 16px; }
 }
+.question-hint { color: var(--color-muted); font-size: 11px; }
+.hero-provenance > span:last-child { margin-left: 0; }
+.source-details { font-size: 12px; margin-block: var(--space-md); color: var(--color-muted); }
+.source-details summary { cursor: pointer; padding-block: var(--space-xs); }
+.source-details p { margin-top: var(--space-xs); }
+footer > button { margin-left: auto; }
+@media (max-width: 760px) { .nav button { flex: 0 1 auto; padding-inline: var(--space-md); font-size: 12px; } }

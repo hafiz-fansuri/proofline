@@ -16,10 +16,8 @@ Developers building AI applications need to understand risks such as prompt inje
 
 | Area | What it provides |
 | --- | --- |
-| **Research** | Explore the OWASP risk atlas, ask a security question, inspect citations, and save helpfulness feedback. |
-| **Source library** | Browse 11 OWASP 2026 documents with original links, pinned revisions, attribution, and stored Markdown. |
-| **Evaluation** | Compare retrieval strategies with a chart of saved runs, inspect 16 authored cases, and export results. |
-| **CI / CD** | See real GitHub workflow results and understand how changes reach the live app. |
+| **Ask a question** | Choose a topic, ask in your own words, read the answer, and check its sources. |
+| **Sources** | Browse the OWASP guides and open the original publications. |
 
 Try asking: **“What controls reduce excessive agency in a tool-using assistant?”** Then click a numbered citation to inspect the supporting passage.
 
@@ -70,7 +68,7 @@ Pull requests run verification without publishing. A push to `main` publishes on
 
 ## Evaluating the system
 
-The dashboard compares keyword and hybrid retrieval using **recall at five passages**, **mean reciprocal rank**, and **retrieval latency**. Runs are saved so their cases and retrieved sources can be inspected later.
+Owner evaluation tooling compares keyword and hybrid retrieval using **recall at five passages**, **mean reciprocal rank**, and **retrieval latency**. Runs are saved in Supabase so their cases and retrieved sources can be inspected later. Evaluation and CI/CD are owner workflows, not public website screens. Run `npm run eval` and inspect GitHub Actions; local owner reports are excluded from Git and hosting.
 
 The development set has 13 answerable questions and three unsupported questions. Retrieval scores measure source finding, **not answer accuracy**. Citation checks validate reference IDs; they do not prove that a passage supports a claim. The [evaluation guide](docs/EVALUATION.md) explains the measurements and how to assess answer quality independently.
 

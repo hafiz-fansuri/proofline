@@ -20,7 +20,7 @@ flowchart LR
 3. PRs have read-only repository permissions and cannot deploy. Review the checks before merging. Branch protection is not configured automatically; a maintainer can require this check in repository rules.
 4. Pushing or merging to `main` runs the same checks. The static output becomes a Pages artifact. The separate `deploy` job must wait for `verify` to pass.
 5. Only the deployment job has `pages: write` and `id-token: write`. GitHub issues a short-lived deployment identity; there is no long-lived hosting token in repository secrets.
-6. Open Actions, select **Verify and publish**, then inspect each job. The app's **CI / CD** page fetches real public workflow runs through Supabase and persists release metadata.
+6. Open Actions, select **Verify and publish**, then inspect each job. CI/CD is an owner workflow. Inspect results in GitHub Actions; the public website has no CI/CD screen.
 
 ## What a failure means
 
